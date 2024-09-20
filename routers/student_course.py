@@ -16,20 +16,6 @@ from typing import List
 
 router = APIRouter()
 
-# @router.post("/student_courses/", response_model=StudentCourseResponse)
-# def create_new_student_course(student_course: StudentCourseCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-#     if current_user.role != 'student':
-#         raise HTTPException(status_code=403, detail="Not enough permissions")
-#     return create_student_course(db=db, student_course=student_course)
-
-# @router.put("/student_courses/{student_course_id}", response_model=StudentCourseResponse)
-# def update_existing_student_course(student_course_id: int, student_course: StudentCourseUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-#     db_student_course = get_student_course(db=db, student_course_id=student_course_id)
-#     if not db_student_course:
-#         raise HTTPException(status_code=404, detail="Student course not found")
-#     if current_user.role == 'student' and db_student_course.student_id != current_user.id:
-#         raise HTTPException(status_code=403, detail="Not allowed to update this course")
-#     return update_student_course(db=db, student_course_id=student_course_id, student_course=student_course)
 
 @router.put("/student_courses/{student_course_id}", response_model=StudentCourseResponse)
 def update_existing_student_course(

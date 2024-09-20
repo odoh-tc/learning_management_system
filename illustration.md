@@ -102,6 +102,7 @@ A StudentContentBlock tracks a student's progress on a specific content block. I
 - `url`: URL for student-submitted content (e.g., assignment submissions).
 - `feedback`: Feedback from the teacher.
 - `grade`: Grade awarded by the teacher.
+- `optional`: Boolean indicating if the content block is optional for the student. This field is particularly relevant for students who have already completed the course; new content blocks added after course completion will be marked as optional for these students, allowing them to engage with the material without affecting their completion status.
 
 ### Relationships
 

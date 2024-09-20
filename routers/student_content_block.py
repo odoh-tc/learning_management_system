@@ -1,12 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
-from schema.student_content_block import StudentContentBlockCreate, StudentContentBlockUpdate, StudentContentBlockResponse
+from schema.student_content_block import  StudentContentBlockUpdate, StudentContentBlockResponse
 from models import User
 from services.auth import get_current_user
 from services.student_content_block import (
-    create_student_content_block,
-    update_student_content_block,
     delete_student_content_block,
     get_student_content_block,
     get_student_content_blocks_by_student,
@@ -16,18 +14,7 @@ from typing import List
 
 router = APIRouter()
 
-# @router.post("/student_content_blocks/", response_model=StudentContentBlockResponse)
-# def create_new_student_content_block(student_content_block: StudentContentBlockCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-#     if current_user.role == 'student':
-#         # Automatically assign the student_id to the logged-in student
-#         student_content_block.student_id = current_user.id
-#         # Prevent the student from setting feedback or grade
-#         student_content_block.feedback = None
-#         student_content_block.grade = 0
-#     elif current_user.role not in ['admin', 'teacher']:
-#         raise HTTPException(status_code=403, detail="Not enough permissions")
-    
-#     return create_student_content_block(db=db, student_content_block=student_content_block)
+
 
 
 @router.put("/student_content_blocks/{student_content_block_id}", response_model=StudentContentBlockResponse)

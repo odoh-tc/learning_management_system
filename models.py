@@ -94,6 +94,8 @@ class StudentContentBlock(Timestamp, Base):
     url = Column(URLType, nullable=True)
     feedback = Column(Text, nullable=True)
     grade = Column(Integer, default=0, server_default="0")  # Default to 0
+    optional = Column(Boolean, default=False)  # Field to mark optional blocks
+
 
     student = relationship("User", back_populates="student_content_blocks")
     content_block = relationship("ContentBlock", back_populates="student_content_blocks")
