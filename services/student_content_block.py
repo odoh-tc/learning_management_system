@@ -75,7 +75,7 @@ def initialize_student_content_blocks(db: Session, student_id: int, course_id: i
 
     # Check if the student has already completed the course
     if student_course.completed:
-        # Add the new content block as optional without changing the course completion status
+        # Get new content blocks for the student that are not already linked
         new_content_blocks = db.query(ContentBlock).filter(
             ContentBlock.section.has(course_id=course_id),
             ContentBlock.id.notin_(
@@ -84,6 +84,9 @@ def initialize_student_content_blocks(db: Session, student_id: int, course_id: i
                 )
             )
         ).all()
+
+        # Debugging: Log or print the blocks being added
+        print(f"Initializing optional content blocks for student {student_id}: {[block.id for block in new_content_blocks]}")
 
         for block in new_content_blocks:
             student_content_block = StudentContentBlock(
@@ -96,10 +99,8 @@ def initialize_student_content_blocks(db: Session, student_id: int, course_id: i
 
         db.commit()
         return
-    
 
-
-    # If not completed, proceed with the standard behavior
+    # If the course is not completed, proceed with standard behavior
     new_content_blocks = db.query(ContentBlock).filter(
         ContentBlock.section.has(course_id=course_id),
         ContentBlock.id.notin_(
@@ -108,6 +109,9 @@ def initialize_student_content_blocks(db: Session, student_id: int, course_id: i
             )
         )
     ).all()
+
+    # Debugging: Log or print the blocks being added
+    print(f"Initializing content blocks for student {student_id}: {[block.id for block in new_content_blocks]}")
 
     for block in new_content_blocks:
         student_content_block = StudentContentBlock(

@@ -133,9 +133,9 @@ class StudentResponse(UserBase):
     id: int
     is_active: bool  # Include in responses
 
-    profile: Optional[ProfileResponse]
-    student_courses: Optional[List["StudentCourseResponse"]]
-    student_content_blocks: Optional[List["StudentContentBlockResponse"]]
+    # profile: Optional[ProfileResponse]
+    # student_courses: Optional[List["StudentCourseResponse"]]
+    # student_content_blocks: Optional[List["StudentContentBlockResponse"]]
 
     class Config:
         orm_mode = True

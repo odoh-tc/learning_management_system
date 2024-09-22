@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Boolean, String, ForeignKey, Column, Integer, Enum, Text, DateTime
+from sqlalchemy import Boolean, Float, String, ForeignKey, Column, Integer, Enum, Text, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 from mixins import Timestamp
@@ -22,6 +22,7 @@ class User(Timestamp, Base):
     created_courses = relationship("Course", back_populates="created_by", foreign_keys="Course.user_id")
     student_courses = relationship("StudentCourse", back_populates="student")
     student_content_blocks = relationship("StudentContentBlock", back_populates="student")
+    payments = relationship("Payment", back_populates="user")
 
 class Profile(Timestamp, Base):
     __tablename__ = "profiles"
@@ -34,6 +35,22 @@ class Profile(Timestamp, Base):
 
     owner = relationship("User", back_populates="profile")
 
+# class Course(Timestamp, Base):
+#     __tablename__ = "courses"
+
+#     id = Column(Integer, primary_key=True, index=True)
+#     title = Column(String(100), nullable=False)
+#     description = Column(Text, nullable=False)
+#     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+#     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+
+#     created_by = relationship("User", back_populates="created_courses", foreign_keys=[user_id])
+#     sections = relationship("Section", back_populates="course")
+#     student_courses = relationship("StudentCourse", back_populates="course")
+#     category = relationship("Category", back_populates="courses")
+
+
+
 class Course(Timestamp, Base):
     __tablename__ = "courses"
 
@@ -42,11 +59,32 @@ class Course(Timestamp, Base):
     description = Column(Text, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    price = Column(Float, nullable=False, default=0.0)  # Price for the course
+    is_paid_course = Column(Boolean, default=False)  # Paid course flag
 
     created_by = relationship("User", back_populates="created_courses", foreign_keys=[user_id])
     sections = relationship("Section", back_populates="course")
     student_courses = relationship("StudentCourse", back_populates="course")
     category = relationship("Category", back_populates="courses")
+    payments = relationship("Payment", back_populates="course")
+
+class Payment(Timestamp, Base):
+    __tablename__ = "payments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+    amount = Column(Float, nullable=False)  # Amount paid
+    status = Column(String(50), nullable=False)  # payment status (pending, success, failed)
+    stripe_payment_intent_id = Column(String(255), nullable=True)  # Store Stripe payment intent ID
+
+    
+    user = relationship("User", back_populates="payments")
+    course = relationship("Course", back_populates="payments")
+
+User.payments = relationship("Payment", back_populates="user")
+Course.payments = relationship("Payment", back_populates="course")
+
 
 class Section(Timestamp, Base):
     __tablename__ = "sections"

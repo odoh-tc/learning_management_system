@@ -6,10 +6,20 @@ from schema.student_course import StudentCourseResponse
 
 # from .user import UserResponse  # Import UserResponse here
 
+# class CourseBase(BaseModel):
+#     title: str
+#     description: str
+#     category_id: Optional[int] = None
+
+
 class CourseBase(BaseModel):
     title: str
     description: str
     category_id: Optional[int] = None
+    price: Optional[float] = 0.0  # Default price is 0 (free course)
+    # discount: Optional[float] = 0.0  # Default discount is 0
+    is_paid_course: Optional[bool] = False  # Default is free course
+
 
 class CourseCreate(CourseBase):
     pass
@@ -17,18 +27,34 @@ class CourseCreate(CourseBase):
 class CourseUpdate(CourseBase):
     pass
 
+# class CourseResponse(BaseModel):
+#     id: int
+#     title: str
+#     description: str
+#     # sections: Optional[List[SectionResponse]]
+#     # student_courses: Optional[List[StudentCourseResponse]]
+#     category_id: Optional[int]
+
+#     class Config:
+#         orm_mode = True
+#         exclude_unset = True
+#         from_attributes = True
+
+
 class CourseResponse(BaseModel):
     id: int
     title: str
     description: str
-    sections: Optional[List[SectionResponse]]
-    student_courses: Optional[List[StudentCourseResponse]]
     category_id: Optional[int]
+    price: Optional[float] = 0.0
+    # discount: Optional[float] = 0.0
+    is_paid_course: Optional[bool] = False
 
     class Config:
         orm_mode = True
-        exclude_unset = True
         from_attributes = True
+        exclude_unset = True
+
 
 
 class CourseCreateResponse(CourseBase):

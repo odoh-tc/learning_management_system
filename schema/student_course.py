@@ -13,7 +13,7 @@ class StudentCourseUpdate(BaseModel):
     # completed: bool = False
 
 class StudentCourseResponse(StudentCourseBase):
-    student_course_id: int
+    id: int
 
     class Config:
         orm_mode = True

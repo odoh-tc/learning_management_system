@@ -16,7 +16,7 @@ class SectionUpdate(SectionBase):
 class SectionResponse(SectionBase):
     id: int
     # content_blocks: Optional[List["ContentBlockResponse"]]
-    content_blocks: Optional[List[ContentBlockResponse]]
+    # content_blocks: Optional[List[ContentBlockResponse]]
 
     class Config:
         orm_mode = True

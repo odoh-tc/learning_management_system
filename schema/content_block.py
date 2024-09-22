@@ -35,7 +35,7 @@ class ContentBlockUpdate(ContentBlockBase):
 class ContentBlockResponse(ContentBlockBase):
     id: int
     section_id: int
-    student_content_blocks: Optional[List["StudentContentBlockResponse"]]
+    # student_content_blocks: Optional[List["StudentContentBlockResponse"]]
 
     class Config:
         orm_mode = True

@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 
-@router.post("/messages/")
+@router.post("/messages/", response_model=MessageResponse)
 def send_message(
     message: MessageCreate,
     db: Session = Depends(get_db),

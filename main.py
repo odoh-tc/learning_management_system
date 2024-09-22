@@ -3,6 +3,7 @@ from routers.auth import router as auth_router
 from routers.user import router as user_router
 from routers.profile import router as profile_router
 from routers.category import router as category_router
+from routers.payment import router as payment_router
 from routers.course import router as course_router
 from routers.section import router as section_router
 from routers.content_block import router as content_block_router
@@ -22,6 +23,7 @@ app.include_router(user_router, prefix="/user", tags=["user"])
 app.include_router(profile_router, prefix="/profile", tags=["profile"])
 app.include_router(enrollment_router, prefix="/enrollment", tags=["enrollment"])
 app.include_router(category_router, prefix="/category", tags=["category"])
+app.include_router(payment_router, prefix="/payment", tags=["payment"])
 app.include_router(course_router, prefix="/course", tags=["course"])
 app.include_router(section_router, prefix="/section", tags=["section"])
 app.include_router(content_block_router, prefix="/content_block", tags=["content_block"])
