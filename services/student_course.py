@@ -3,21 +3,6 @@ from sqlalchemy.orm import Session
 from schema.student_course import StudentCourseCreate, StudentCourseUpdate
 from models import ContentBlock, StudentContentBlock, StudentCourse
 
-# def create_student_course(db: Session, student_course: StudentCourseCreate):
-#     db_student_course = StudentCourse(**student_course.dict())
-#     db.add(db_student_course)
-#     db.commit()
-#     db.refresh(db_student_course)
-#     return db_student_course
-
-# def update_student_course(db: Session, student_course_id: int, student_course: StudentCourseUpdate):
-#     db_student_course = db.query(StudentCourse).filter(StudentCourse.id == student_course_id).first()
-#     if db_student_course:
-#         for key, value in student_course.dict(exclude_unset=True).items():
-#             setattr(db_student_course, key, value)
-#         db.commit()
-#         db.refresh(db_student_course)
-#     return db_student_course
 
 
 
@@ -87,3 +72,5 @@ def get_student_courses_by_student(db: Session, student_id: int):
 
 def get_student_courses_by_course(db: Session, course_id: int):
     return db.query(StudentCourse).filter(StudentCourse.course_id == course_id).all()
+
+

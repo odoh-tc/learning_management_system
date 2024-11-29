@@ -6,6 +6,8 @@ from services.auth import get_current_user
 import stripe
 import os
 from dotenv import load_dotenv
+from stripe.error import CardError, RateLimitError, InvalidRequestError, AuthenticationError, APIConnectionError, StripeError
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -44,8 +46,28 @@ def create_payment_intent(course_id: int, db: Session = Depends(get_db), current
 
         return {"client_secret": intent['client_secret'], "payment_id": payment.id}
 
+    except CardError as e:
+        # Card was declined
+        raise HTTPException(status_code=400, detail=f"Card error: {e.user_message}")
+    except RateLimitError as e:
+        # Too many requests hit the API too quickly
+        raise HTTPException(status_code=429, detail="Too many requests to Stripe. Please try again later.")
+    except InvalidRequestError as e:
+        # Invalid request (e.g., invalid parameters)
+        raise HTTPException(status_code=400, detail=f"Invalid request: {e.user_message}")
+    except AuthenticationError as e:
+        # Authentication with Stripe's API failed
+        raise HTTPException(status_code=401, detail="Authentication with payment provider failed")
+    except APIConnectionError as e:
+        # Network communication failed
+        raise HTTPException(status_code=502, detail="Network error with payment provider")
+    except StripeError as e:
+        # Other general Stripe error
+        raise HTTPException(status_code=500, detail="Something went wrong with the payment provider")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error creating payment intent: {str(e)}")
+        # Catch any other non-Stripe error
+        raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
 
 @router.post("/confirm-payment/")
 def confirm_payment(payment_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -57,6 +79,12 @@ def confirm_payment(payment_id: int, db: Session = Depends(get_db), current_user
     # Check Stripe payment status using the stored Stripe payment intent ID
     try:
         intent = stripe.PaymentIntent.retrieve(payment.stripe_payment_intent_id)  # Use Stripe payment intent ID
+
+        # Check if additional action is required (e.g., 3D Secure authentication)
+        if intent['status'] == 'requires_action':
+            raise HTTPException(status_code=400, detail="Additional action required to complete the payment")
+
+        # Check if payment was successful
         if intent['status'] == 'succeeded':
             # Update payment status
             payment.status = 'success'
@@ -69,3 +97,5 @@ def confirm_payment(payment_id: int, db: Session = Depends(get_db), current_user
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving payment intent: {str(e)}")
+
+
